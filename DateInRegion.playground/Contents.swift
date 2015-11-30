@@ -27,11 +27,13 @@ import DateInRegion
 
 // First create some regions
 let local = DateRegion()
+let netherlands = DateRegion(calendarID: NSCalendarIdentifierGregorian, timeZoneID: "Europe?Amsterdam", localeID: "nl_NL")
 let india = DateRegion(calendarID: NSCalendarIdentifierIndian, timeZoneID: "IST", localeID: "en_IN")
+let tibetan = DateRegion(calendarID: NSCalendarIdentifierIndian, timeZoneID: "IST", localeID: "bo_IN")
 let dubai = DateRegion(calendarID: NSCalendarIdentifierIslamic, timeZoneID: "GST", localeID: "ar_AE")
 let newZealand = DateRegion(calendarID: NSCalendarIdentifierGregorian, localeID: "en_NZ", timeZoneID: "Pacific/Auckland")
 let israel = DateRegion(calendarID: NSCalendarIdentifierHebrew, timeZoneID: "Asia/Jerusalem", localeID: "he_IL")
-let china = DateRegion(calendarID: NSCalendarIdentifierChinese, timeZoneID: "CST", localeID: "zn_CH")
+let china = DateRegion(calendarID: NSCalendarIdentifierChinese, timeZoneID: "Asia/Shanghai", localeID: "zn_CH")
 let magadan = DateRegion(calendarID: NSCalendarIdentifierGregorian, timeZoneID: "Asia/Magadan", localeID: "ru_RU")
 let thailand = DateRegion(calendarID: NSCalendarIdentifierBuddhist, timeZoneID: "Asia/Bangkok", localeID: "th_TH")
 let japan = DateRegion(calendarID: NSCalendarIdentifierBuddhist, timeZoneID: "Asia/Tokyo", localeID: "ja_JP")
@@ -39,29 +41,31 @@ let unalaska = DateRegion(calendarID: NSCalendarIdentifierGregorian, timeZoneID:
 let utc = DateRegion(calendarID: NSCalendarIdentifierGregorian, timeZoneID: "UTC", localeID: "en_US_POSIX")
 
 
-//: #### Initialisers
-//: Create a new date object with the current date & time alike NSDate()
+// Initialisers
+// Create a new date object with the current date & time alike NSDate()
 let now = DateInRegion()
 
-//: Create a determined date
+// Create a determined date
 let newDate = DateInRegion(year: 2011, month: 2, day: 11)!
 
-//: Create a determined date in a different time zone
+// Create a determined date in a different time zone
 let newYork = DateRegion(timeZoneID: "EST")
 DateInRegion(fromDate: newDate, hour: 14, region: newYork)!
 
-//: Mind that default values for DateInRegion(year etc) are taken from the reference date,
-//: which is 1 January 2001, 00:00:00.000 in your default time zone and against your current calendar.
+// Mind that default values for DateInRegion(year etc) are taken from the reference date,
+// which is 1 January 2001, 00:00:00.000 in your default time zone and against your current calendar.
 
-//: Week oriented initiailisations are also possible: first week of 2016:
+// Week oriented initiailisations are also possible: first week of 2016:
 let weekDate = DateInRegion(yearForWeekOfYear: 2016, weekOfYear: 1, weekday: 1)!
-//: In Europe this week starts in 2015 despite the year for the week that is 2016.
-//: That is because the Thursday of this week is in 2016 as specified by ISO 8601
+// In Europe this week starts in 2015 despite the year for the week that is 2016.
+// That is because the Thursday of this week is in 2016 as specified by ISO 8601
 
 // Conversions
 let unalaskaDate = now.inRegion(unalaska)
+let netherlandsDate = now.inRegion(netherlands)
 let newYorkDate = now.inRegion(newYork)
 let indiaDate = now.inRegion(india)
+let tibetanDate = now.inRegion(tibetan)
 let dubaiDate = now.inRegion(dubai)
 let israelDate = now.inRegion(israel)
 let chinaDate = now.inRegion(china)
@@ -77,8 +81,10 @@ let localDate = japanDate2.inLocalRegion()
 
 // Now look in regional format
 unalaskaDate.toString()
+netherlandsDate.toString()
 newYorkDate.toString()
 indiaDate.toString()
+tibetanDate.toString()
 dubaiDate.toString()
 israelDate.toString()
 chinaDate.toString()
@@ -87,9 +93,21 @@ japanDate.toString()
 thailandDate.toString()
 newZealandDate.toString()
 utcDate.toString()
-
 japanDate2.toString()
 localDate.toString()
+
+// Other string formats: with styles
+newYorkDate.toString(dateStyle: .LongStyle)
+newYorkDate.toString(timeStyle: .LongStyle)
+newYorkDate.toString(dateStyle: .ShortStyle, timeStyle: .MediumStyle)
+
+// Other string formats: with Unicode abbreviations 
+// http://www.unicode.org/reports/tr35/tr35-31/tr35-dates.html#Date_Format_Patterns
+newYorkDate.toString("yy-MM-dd")
+newYorkDate.toString("yyyy-DDD")
+newYorkDate.toString("yy.ww.e")
+newYorkDate.toString("HH:mm:ss.SSS")
+newYorkDate.toString("hh:mm:ss a z")
 
 // Or get date components
 unalaskaDate.hour
@@ -115,18 +133,18 @@ nsDate.inRegion(magadan).toString()
 nsDate.inRegion(newZealand).toString()
 
 
-//: #### Equations
-//: DateInRegion conforms to the Equatable protocol. I.e. you can compare with == for equality.
+// Equations
+// DateInRegion conforms to the Equatable protocol. I.e. you can compare with == for equality.
 let newDate2 = DateInRegion(fromDate: newDate)
 let newDate3 = DateInRegion(fromDate: newDate, hour: 9)!
 newDate == newDate
 newDate == newDate2
 newDate == newDate3
 
-//: For equal date values, you should use x.isEqualToDate(y) note that this compares the moment not the region
+// For equal date values, you should use x.isEqualToDate(y) note that this compares the moment not the region
 
-//: #### Comparisons
-//: DateInRegion conforms to the Comparable protocol. I.e. you can compare with <. <=, ==, >=, >
+// Comparisons
+// DateInRegion conforms to the Comparable protocol. I.e. you can compare with <. <=, ==, >=, >
 newDate > newDate2
 newDate >= newDate2
 newDate == newDate2
@@ -134,32 +152,29 @@ newDate != newDate2
 newDate <= newDate2
 newDate < newDate2
 
-//: Mind that comparisons takes the absolute time from the date property into account.
-//: regions (calendars, time zones, locales, have no effect on the comparison results.
+// Mind that comparisons takes the absolute time from the date property into account.
+// regions (calendars, time zones, locales, have no effect on the comparison results.
 let date1 = DateInRegion(year: 2000, month: 1, day: 1, hour: 14, region: utc)!
 let date2 = (date1 + 1.hours)!
 
-//: date1 = 14:00 UTC
-//: date2 = 15:00 UTC
+// date1 = 14:00 UTC
+// date2 = 15:00 UTC
 date1 > date2
 date1 < date2
 
 let indiaDate1 = DateInRegion(fromDate: date1, region: india)
 
-//: indiaDate1 = 19:30 IST
-//: date1 = 14:00 UTC
-//: date2 = 9:00 CST
+// indiaDate1 = 19:30 IST
+// date1 = 14:00 UTC
+// date2 = 9:00 CST
 indiaDate1 > date2
 indiaDate1 < date2
 
 indiaDate1.isEqualToDate(date1)
+// QED: same outcome!
 
-//: QED: same outcome!
-
-
-//: #### Collections
-
-//: Use as a key in a dictionary
+// Collections
+// Use as a key in a dictionary
 var birthdays = [DateInRegion: String]()
 birthdays[DateInRegion(year: 1997, month: 5, day: 7)!] = "Jerry"
 birthdays[DateInRegion(year: 1999, month: 12, day: 14)!] = "Ken"
@@ -169,18 +184,8 @@ birthdays.sort({ (a: (date: DateInRegion, String), b: (date: DateInRegion, Strin
 })
 
 
-//: #### Display & string conversion
-//: DateInRegion conforms to the ConvertString protocol
+// Display & string conversion
+// DateInRegion conforms to the ConvertString protocol
 chinaDate.description
-chinaDate.toString()
+chinaDate.debugDescription
 
-// Various string styles
-now.toString()!
-now.toString(.LongStyle)!
-now.toString(.MediumStyle)!
-now.toString(.ShortStyle)!
-now.toString(dateStyle: .ShortStyle)!
-now.toString(timeStyle: .MediumStyle)!
-now.toString(dateStyle: .LongStyle, timeStyle: .ShortStyle)!
-now.toString("YYYY")!
-now.toString("yy-mm-dd")!
