@@ -341,7 +341,7 @@ class DateInRegionSpec: QuickSpec {
                 }
 
                 it("Should output a proper debug description") {
-                    expect(date.debugDescription) == "UTC\t31 december 1999 22:59:59 GMT\nLocal\t31 december 1999 23:59:59 CET\nCalendar: gregorian\nTime zone: Europe/Amsterdam\nLocale: nl_NL"
+                    expect(date.debugDescription) == "31 december 1999 23:59:59 CET\nUTC\t31 december 1999 22:59:59 GMT\nCalendar: gregorian\nTime zone: Europe/Amsterdam\nLocale: nl_NL"
                 }
             }
 

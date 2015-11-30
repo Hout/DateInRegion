@@ -40,7 +40,8 @@ public extension DateInRegion {
             formatter.locale = self.locale
             formatter.calendar = self.calendar
             formatter.timeZone = self.timeZone
-            return formatter.stringFromDate(date)
+            let string = formatter.stringFromDate(date)
+            return string
     }
 
     /// Returns a relative date representation of a given string interpreted using the receiver’s current settings.

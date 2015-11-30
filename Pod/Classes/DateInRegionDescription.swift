@@ -28,10 +28,11 @@ extension DateInRegion : CustomDebugStringConvertible {
         formatter.timeStyle = .LongStyle
         formatter.locale = self.locale
         formatter.calendar = self.calendar
+        formatter.timeZone = self.timeZone
+        descriptor.append(formatter.stringFromDate(self.date))
+
         formatter.timeZone = NSTimeZone(abbreviation: "UTC")
         descriptor.append("UTC\t\(formatter.stringFromDate(self.date))")
-        formatter.timeZone = self.timeZone
-        descriptor.append("Local\t\(formatter.stringFromDate(self.date))")
 
         descriptor.append("Calendar: \(calendar.calendarIdentifier)")
         descriptor.append("Time zone: \(timeZone.name)")
