@@ -107,6 +107,7 @@ extension DateRegion : Hashable {
 
 extension DateRegion : CustomStringConvertible {
     public var description: String {
-        return "\(calendar.calendarIdentifier); \(timeZone.name):\(timeZone.abbreviation ?? ""); \(locale.localeIdentifier)"
+        let timeZoneAbbreviation = timeZone.abbreviation ?? ""
+        return "\(calendar.calendarIdentifier); \(timeZone.name):\(timeZoneAbbreviation); \(locale.localeIdentifier)"
     }
 }

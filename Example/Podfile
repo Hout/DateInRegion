@@ -6,7 +6,5 @@ use_frameworks!
 
 pod "DateInRegion", :path => "../"
 
-target 'DateInRegion_Tests' do
-    pod 'Quick'
-    pod 'Nimble'
-end
+pod 'Quick'
+pod 'Nimble'
