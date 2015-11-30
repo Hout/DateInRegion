@@ -1,5 +1,15 @@
 # Change Log
 
+## [0.5.2](https://github.com/Hout/DateInRegion/tree/0.5.2) (2015-11-30)
+
+- Bugfixes in testing and description
+- Got Travis CI working
+
+## [0.5.1](https://github.com/Hout/DateInRegion/tree/0.5.1) (2015-11-18)
+
+- Renamed from JHDate to DateInRegion
+
+
 ## [0.5.0](https://github.com/Hout/DateInRegion/tree/0.5.0) (2015-11-08)
 
 - Implemented ``Hashable & Equatable`` protocols
