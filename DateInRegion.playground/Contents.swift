@@ -29,17 +29,7 @@ import DateInRegion
 let local = DateRegion()
 let netherlands = DateRegion(calendarID: NSCalendarIdentifierGregorian, timeZoneID: "Europe?Amsterdam", localeID: "nl_NL")
 let india = DateRegion(calendarID: NSCalendarIdentifierIndian, timeZoneID: "IST", localeID: "en_IN")
-let tibetan = DateRegion(calendarID: NSCalendarIdentifierIndian, timeZoneID: "IST", localeID: "bo_IN")
-let dubai = DateRegion(calendarID: NSCalendarIdentifierIslamic, timeZoneID: "GST", localeID: "ar_AE")
-let newZealand = DateRegion(calendarID: NSCalendarIdentifierGregorian, localeID: "en_NZ", timeZoneID: "Pacific/Auckland")
-let israel = DateRegion(calendarID: NSCalendarIdentifierHebrew, timeZoneID: "Asia/Jerusalem", localeID: "he_IL")
 let china = DateRegion(calendarID: NSCalendarIdentifierChinese, timeZoneID: "Asia/Shanghai", localeID: "zn_CH")
-let magadan = DateRegion(calendarID: NSCalendarIdentifierGregorian, timeZoneID: "Asia/Magadan", localeID: "ru_RU")
-let thailand = DateRegion(calendarID: NSCalendarIdentifierBuddhist, timeZoneID: "Asia/Bangkok", localeID: "th_TH")
-let japan = DateRegion(calendarID: NSCalendarIdentifierBuddhist, timeZoneID: "Asia/Tokyo", localeID: "ja_JP")
-let unalaska = DateRegion(calendarID: NSCalendarIdentifierGregorian, timeZoneID: "AKST", localeID: "en_US")
-let utc = DateRegion(calendarID: NSCalendarIdentifierGregorian, timeZoneID: "UTC", localeID: "en_US_POSIX")
-
 
 // Initialisers
 // Create a new date object with the current date & time alike NSDate()
@@ -59,6 +49,89 @@ DateInRegion(fromDate: newDate, hour: 14, region: newYork)!
 let weekDate = DateInRegion(yearForWeekOfYear: 2016, weekOfYear: 1, weekday: 1)!
 // In Europe this week starts in 2015 despite the year for the week that is 2016.
 // That is because the Thursday of this week is in 2016 as specified by ISO 8601
+
+// Or get date components
+now.hour
+now.day
+now.month
+now.year
+
+// NSDate conversions
+let nsDate = NSDate()
+nsDate.inRegion(newYork).toString()
+nsDate.inRegion(india).toString()
+nsDate.inRegion(china).toString()
+
+
+// Equations
+// DateInRegion conforms to the Equatable protocol. I.e. you can compare with == for equality.
+let newDate2 = DateInRegion(fromDate: newDate)
+let newDate3 = DateInRegion(fromDate: newDate, hour: 9)!
+newDate == newDate
+newDate == newDate2
+newDate == newDate3
+
+// For equal date values, you should use x.isEqualToDate(y) note that this compares the moment not the region
+
+// Comparisons
+// DateInRegion conforms to the Comparable protocol. I.e. you can compare with <. <=, ==, >=, >
+newDate > newDate2
+newDate >= newDate2
+newDate == newDate2
+newDate != newDate2
+newDate <= newDate2
+newDate < newDate2
+
+// Mind that comparisons takes the absolute time from the date property into account.
+// regions (calendars, time zones, locales, have no effect on the comparison results.
+let date1 = DateInRegion(year: 2000, month: 1, day: 1, hour: 14, region: netherlands)!
+let date2 = (date1 + 1.hours)!
+let date3 = (date2 - 2.weeks)!
+
+// date1 = 14:00 UTC
+// date2 = 15:00 UTC
+date1 > date2
+date1 < date2
+
+let indiaDate1 = DateInRegion(fromDate: date1, region: india)
+
+// indiaDate1 = 18:30 IST
+// date1 = 14:00 UTC
+// date2 = 9:00 CST
+indiaDate1 > date2
+indiaDate1 < date2
+
+indiaDate1.isEqualToDate(date1)
+// QED: same outcome!
+
+// Collections
+// Use as a key in a dictionary
+var birthdays = [DateInRegion: String]()
+birthdays[DateInRegion(year: 1997, month: 5, day: 7)!] = "Jerry"
+birthdays[DateInRegion(year: 1999, month: 12, day: 14)!] = "Ken"
+birthdays[DateInRegion(year: 1990, month: 12, day: 5)!] = "Sinterklaas"
+birthdays.sort({ (a: (date: DateInRegion, String), b: (date: DateInRegion, String)) -> Bool in
+    return a.date < b.date
+})
+
+// Display & string conversion
+// DateInRegion conforms to the ConvertString protocol
+indiaDate1.description
+
+// DateInRegion conforms to the DebugConvertString protocol
+indiaDate1.debugDescription
+
+// Create some more regions to illustrate conversions & string handling
+let tibetan = DateRegion(calendarID: NSCalendarIdentifierIndian, timeZoneID: "IST", localeID: "bo_IN")
+let dubai = DateRegion(calendarID: NSCalendarIdentifierIslamic, timeZoneID: "GST", localeID: "ar_AE")
+let newZealand = DateRegion(calendarID: NSCalendarIdentifierGregorian, localeID: "en_NZ", timeZoneID: "Pacific/Auckland")
+let israel = DateRegion(calendarID: NSCalendarIdentifierHebrew, timeZoneID: "Asia/Jerusalem", localeID: "he_IL")
+let magadan = DateRegion(calendarID: NSCalendarIdentifierGregorian, timeZoneID: "Asia/Magadan", localeID: "ru_RU")
+let thailand = DateRegion(calendarID: NSCalendarIdentifierBuddhist, timeZoneID: "Asia/Bangkok", localeID: "th_TH")
+let japan = DateRegion(calendarID: NSCalendarIdentifierBuddhist, timeZoneID: "Asia/Tokyo", localeID: "ja_JP")
+let unalaska = DateRegion(calendarID: NSCalendarIdentifierGregorian, timeZoneID: "AKST", localeID: "en_US")
+let utc = DateRegion(calendarID: NSCalendarIdentifierGregorian, timeZoneID: "UTC", localeID: "en_US_POSIX")
+
 
 // Conversions
 let unalaskaDate = now.inRegion(unalaska)
@@ -109,83 +182,4 @@ newYorkDate.toString("yy.ww.e")
 newYorkDate.toString("HH:mm:ss.SSS")
 newYorkDate.toString("hh:mm:ss a z")
 
-// Or get date components
-unalaskaDate.hour
-unalaskaDate.day
-unalaskaDate.month
-unalaskaDate.year
-
-dubaiDate.hour
-dubaiDate.day
-dubaiDate.month
-dubaiDate.year
-
-magadanDate.hour
-magadanDate.day
-magadanDate.month
-magadanDate.year
-
-// NSDate conversions
-let nsDate = NSDate()
-nsDate.inRegion(newYork).toString()
-nsDate.inRegion(utc).toString()
-nsDate.inRegion(magadan).toString()
-nsDate.inRegion(newZealand).toString()
-
-
-// Equations
-// DateInRegion conforms to the Equatable protocol. I.e. you can compare with == for equality.
-let newDate2 = DateInRegion(fromDate: newDate)
-let newDate3 = DateInRegion(fromDate: newDate, hour: 9)!
-newDate == newDate
-newDate == newDate2
-newDate == newDate3
-
-// For equal date values, you should use x.isEqualToDate(y) note that this compares the moment not the region
-
-// Comparisons
-// DateInRegion conforms to the Comparable protocol. I.e. you can compare with <. <=, ==, >=, >
-newDate > newDate2
-newDate >= newDate2
-newDate == newDate2
-newDate != newDate2
-newDate <= newDate2
-newDate < newDate2
-
-// Mind that comparisons takes the absolute time from the date property into account.
-// regions (calendars, time zones, locales, have no effect on the comparison results.
-let date1 = DateInRegion(year: 2000, month: 1, day: 1, hour: 14, region: utc)!
-let date2 = (date1 + 1.hours)!
-
-// date1 = 14:00 UTC
-// date2 = 15:00 UTC
-date1 > date2
-date1 < date2
-
-let indiaDate1 = DateInRegion(fromDate: date1, region: india)
-
-// indiaDate1 = 19:30 IST
-// date1 = 14:00 UTC
-// date2 = 9:00 CST
-indiaDate1 > date2
-indiaDate1 < date2
-
-indiaDate1.isEqualToDate(date1)
-// QED: same outcome!
-
-// Collections
-// Use as a key in a dictionary
-var birthdays = [DateInRegion: String]()
-birthdays[DateInRegion(year: 1997, month: 5, day: 7)!] = "Jerry"
-birthdays[DateInRegion(year: 1999, month: 12, day: 14)!] = "Ken"
-birthdays[DateInRegion(year: 1990, month: 12, day: 5)!] = "Sinterklaas"
-birthdays.sort({ (a: (date: DateInRegion, String), b: (date: DateInRegion, String)) -> Bool in
-    return a.date < b.date
-})
-
-
-// Display & string conversion
-// DateInRegion conforms to the ConvertString protocol
-chinaDate.description
-chinaDate.debugDescription
 
