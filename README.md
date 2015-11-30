@@ -249,7 +249,7 @@ if you would like to contribute:
 
 These libs & authors inspired me to this code:
 
-- [SwiftDate](https://github.com/malcommac/SwiftDate) from Daniele Margutti. I recommend this one if you are looking for a plain Swift NSDate extension.
+- [SwiftDate](https://github.com/malcommac/SwiftDate) from Daniele Margutti. In the mean time big parts of DateInRegion are incorporated in this library. Check it out!
 
 
 ## License
