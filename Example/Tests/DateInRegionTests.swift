@@ -10,7 +10,6 @@
 
 import Quick
 import Nimble
-import SwiftRegExp
 
 @testable import DateInRegion
 
@@ -348,7 +347,7 @@ class DateInRegionSpec: QuickSpec {
 
             context("date formatter") {
 
-                let china = DateRegion(calendarID: NSCalendarIdentifierBuddhist, timeZoneID: "CHT", localeID: "zh_CN")
+                let china = DateRegion(calendarID: NSCalendarIdentifierBuddhist, timeZoneID: "Asia/Shanghai", localeID: "zh_CN")
                 let netherlands = DateRegion(calendarID: NSCalendarIdentifierGregorian, timeZoneID: "CET", localeID: "nl_NL")
                 let date = DateInRegion(year: 1999, month: 12, day: 31, hour: 23, minute: 59, second: 59, nanosecond: 500000000, region: netherlands)!
 
@@ -358,7 +357,7 @@ class DateInRegionSpec: QuickSpec {
 
                 it("should assign calendar, time zone and locale properly") {
                     let testDate = DateInRegion(fromDate: date, region: china)
-                    expect(testDate.toString()) == "佛历2542年12月31日 下午11:59:59"
+                    expect(testDate.toString()) == "佛历2543年1月1日 上午6:59:59"
                 }
 
                 it("should return a proper string by default") {
